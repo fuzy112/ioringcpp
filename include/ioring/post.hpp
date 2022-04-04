@@ -12,9 +12,10 @@ namespace ioring
     template <typename Handler>
     struct post_op
     {
-        post_op(uring &ring, Handler &&h)
+        template <typename H>
+        post_op(uring &ring, H &&h)
             : ring(ring),
-              handler(std::forward<Handler>(h))
+              handler(std::forward<H>(h))
         {
         }
 

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <thread>
 
 using namespace ioring;
 
@@ -114,23 +115,6 @@ private:
 void on_run(uring &ring)
 {
     std::make_shared<listener>(ring)->go();
-
-    auto client = std::make_shared<connection>(ring);
-    client->socket().open(tcp::v4());
-    client->socket().async_connect(
-        tcp::endpoint(tcp::address_v4(), 12345),
-        [client](std::error_code ec)
-        {
-        if (ec)
-            return fail("connect", ec);
-
-        client->socket().async_write_some(const_buffer("hello world", 11), 
-            [client](std::error_code ec, std::size_t /*bytes_written*/) {
-            if (ec)
-                return fail("write", ec);
-
-            client->go();
-        }); });
 }
 
 int main()
@@ -144,5 +128,14 @@ int main()
              on_run(ring);
          });
 
-    ring.run();
+    std::vector<std::thread> threads;
+    for (int i = 0; i < 1; ++i)
+    {
+        threads.emplace_back([&]
+                             { ring.run(); });
+    }
+    for (auto &t : threads)
+    {
+        t.join();
+    }
 }

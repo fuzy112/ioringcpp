@@ -37,7 +37,7 @@ namespace ioring
             {
                 if (cqe->res < 0)
                 {
-                    handler_(std::error_code(-cqe->res, std::system_error()),
+                    handler_(std::error_code(-cqe->res, std::system_category()),
                              0);
                 }
                 else
