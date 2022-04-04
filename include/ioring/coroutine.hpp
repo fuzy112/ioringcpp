@@ -20,7 +20,7 @@ namespace ioring
             else
 
 #define IORING_CORO_REENTER(__coro)                          \
-    unsigned *__current_state = &__coro->coroutine::__state; \
+    unsigned *__current_state = &__coro->::ioring::coroutine::__state; \
     unsigned __coro_yield = 0;                               \
     unsigned __coro_out = 0;                                 \
     if (*__current_state == 0)                               \
