@@ -89,6 +89,7 @@ namespace ioring
 
             void length(socklen_t len)
             {
+                (void)len;
                 assert(len == sizeof(value_));
             }
 

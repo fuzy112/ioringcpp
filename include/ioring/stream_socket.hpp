@@ -45,7 +45,7 @@ namespace ioring
     {
         this->get_uring().submit([&](io_uring_sqe *sqe)
                                  {
-                    memset(sqe, 0, sizeof(sqe));
+                    memset(sqe, 0, sizeof(*sqe));
                     sqe->opcode = IORING_OP_CONNECT;
                     sqe->fd = this->native_handle();
                     sqe->addr = reinterpret_cast<__u64>(endpoint.get());

@@ -53,7 +53,7 @@ private:
             { self->handle_write(ec, bytes_written); });
     }
 
-    void handle_write(std::error_code ec, std::size_t bytes_written)
+    void handle_write(std::error_code ec, std::size_t /*bytes_written*/)
     {
         if (ec)
             return fail("write", ec);
@@ -111,7 +111,7 @@ private:
     std::shared_ptr<connection> conn_;
 };
 
-void on_run(uring &ring, std::error_code ec = {})
+void on_run(uring &ring)
 {
     std::make_shared<listener>(ring)->go();
 
@@ -125,7 +125,7 @@ void on_run(uring &ring, std::error_code ec = {})
             return fail("connect", ec);
 
         client->socket().async_write_some(const_buffer("hello world", 11), 
-            [client](std::error_code ec, std::size_t bytes_written) {
+            [client](std::error_code ec, std::size_t /*bytes_written*/) {
             if (ec)
                 return fail("write", ec);
 
@@ -137,8 +137,12 @@ int main()
 {
     uring ring(20);
 
-    post(ring, [&ring](std::error_code ec = {})
-         { on_run(ring); });
+    post(ring,
+         [&ring](std::error_code ec = {})
+         {
+             (void)ec;
+             on_run(ring);
+         });
 
     ring.run();
 }
