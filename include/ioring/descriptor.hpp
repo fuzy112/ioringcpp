@@ -23,7 +23,7 @@ namespace ioring
 
         void assign(int fd)
         {
-            if (fd > -1)
+            if (fd_ > -1)
             {
                 ::close(fd_);
             }

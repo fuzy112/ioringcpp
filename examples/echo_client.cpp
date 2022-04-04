@@ -45,20 +45,15 @@ struct client : coroutine
                 yield in_.async_read_some(mutable_buffer(buff_, buff_len_), *this);
                 if (bytes == 0)
                 {
-                    std::cerr << "1\n";
-                    yield break;
+                    yield return;
                 }
-                std::cerr << "2\n";
                 yield sock_.async_write_some(const_buffer(buff_, bytes), *this);
 
                 yield sock_.async_read_some(mutable_buffer(buff_, buff_len_), *this);
 
                 yield out_.async_write_some(const_buffer(buff_, bytes), *this);
             }
-            std::cerr << "3\n";
         }
-
-        std::cerr << "4\n";
     }
 #include <ioring/unyield.hpp>
 
